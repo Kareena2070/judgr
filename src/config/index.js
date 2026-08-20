@@ -1,12 +1,22 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const PORT = process.env.PORT;
+const requiredEnvVars = [
+  "MONGO_URI",
+];
 
-if(!PORT){
-    throw new Error("PORT environment variable is required");
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.error(`Missing required environment variable: ${envVar}`);
+    process.exit(1);
+  }
 }
 
-module.exports = {
-    PORT,
-    NODE_ENV: process.env.NODE_ENV || "development",
+const config = {
+  env: process.env.NODE_ENV || "development",
+
+  port: Number(process.env.PORT) || 5000,
+
+  mongoUri: process.env.MONGO_URI,
 };
+
+module.exports = config;
