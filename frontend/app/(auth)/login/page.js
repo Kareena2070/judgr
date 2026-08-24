@@ -1,35 +1,81 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import apiClient from "../../lib/apiClient.js";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
-  const [status, setStatus] = useState("Checking backend...");
+  const router = useRouter();
+  const { login } = useAuth();
 
-  useEffect(() => {
-    const checkBackend = async () => {
-      try {
-        const response = await apiClient.get("/api/v1/health");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-        console.log("Health response:", response.data);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        setStatus("Backend connected");
-      } catch (error) {
-        console.error("Health check failed:", error);
+    setError("");
+    setIsSubmitting(true);
 
-        setStatus("Backend connection failed");
+    try {
+      const user = await login(email, password);
+
+      if (user.role === "student") {
+        router.push("/student");
+      } else if (user.role === "judge") {
+        router.push("/judge");
+      } else if (user.role === "admin") {
+        router.push("/admin");
       }
-    };
+    } catch (error) {
+      console.error("Login failed:", error);
 
-    checkBackend();
-  }, []);
+      setError(
+        error?.response?.data?.message ||
+          "Login failed. Please check your email and password."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main>
       <h1>Login</h1>
-      <p>Login page coming soon</p>
 
-      <p>{status}</p>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email</label>
+
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label htmlFor="password">Password</label>
+
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+        </div>
+
+        {error && <p>{error}</p>}
+
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Logging in..." : "Login"}
+        </button>
+      </form>
     </main>
   );
 }
