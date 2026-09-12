@@ -81,14 +81,14 @@ router.post(
 
 router.get(
   "/",
-  authenticate,
+  // authenticate,
   validate(listHackathonsSchema),
   hackathonController.listHackathonsController,
 );
 
 router.get(
   "/:id",
-  authenticate,
+  // authenticate,
   hackathonController.getHackathonByIdController,
 );
 
