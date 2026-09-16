@@ -29,7 +29,7 @@ export default function EditHackathonPage() {
   useEffect(() => {
     async function fetchHackathon() {
       try {
-        const response = await apiClient.get(`/api/v1/hackathons/${params.id}`);
+        const response = await apiClient.get(`/hackathons/${params.id}`);
 
         console.log("Hackathon:", response.data);
 

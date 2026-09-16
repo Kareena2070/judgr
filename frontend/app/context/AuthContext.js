@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
 
   const register = async (name, email, password) => {
     try {
-      const response = await apiClient.post("/api/v1/auth/register", {
+      const response = await apiClient.post("/auth/register", {
         name,
         email,
         password,
@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await apiClient.post("/api/v1/auth/login", {
+      const response = await apiClient.post("/auth/login", {
         email,
         password,
       });
@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await apiClient.post("/api/v1/auth/logout");
+      await apiClient.post("/auth/logout");
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
@@ -66,7 +66,7 @@ export function AuthProvider({ children }) {
 
   const refresh = async () => {
     try {
-      const response = await apiClient.post("/api/v1/auth/refresh");
+      const response = await apiClient.post("/auth/refresh");
 
       const newAccessToken = response.data.data.accessToken;
 
@@ -89,7 +89,7 @@ export function AuthProvider({ children }) {
 
       if (newAccessToken) {
         try {
-          const response = await apiClient.get("/api/v1/auth/me");
+          const response = await apiClient.get("/auth/me");
 
           setUser(response.data.data);
         } catch (error) {

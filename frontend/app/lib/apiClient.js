@@ -47,7 +47,7 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await apiClient.post("/api/v1/auth/refresh");
+        const response = await apiClient.post("/auth/refresh");
 
         const newAccessToken = response.data.data.accessToken;
 

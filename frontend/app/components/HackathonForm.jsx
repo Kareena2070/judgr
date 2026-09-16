@@ -173,13 +173,13 @@ export default function HackathonForm({ initialData = null, isEdit = false }) {
         }
 
         response = await apiClient.patch(
-          `/api/v1/hackathons/${initialData._id}`,
+          `/hackathons/${initialData._id}`,
           updateData,
         );
 
         console.log("Hackathon updated:", response.data);
       } else {
-        response = await apiClient.post("/api/v1/hackathons", formData);
+        response = await apiClient.post("/hackathons", formData);
 
         console.log("Hackathon created:", response.data);
       }

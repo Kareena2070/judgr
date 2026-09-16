@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import apiClient from "../../../lib/apiClient";
 
 export default function StudentHackathonDetailPage() {
@@ -10,6 +11,7 @@ export default function StudentHackathonDetailPage() {
   const [hackathon, setHackathon] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [countdown, setCountdown] = useState(null);
+  const [teamStatus, setTeamStatus] = useState("Loading team status...");
 
   useEffect(() => {
     if (!hackathon) return;
@@ -73,7 +75,7 @@ export default function StudentHackathonDetailPage() {
   useEffect(() => {
     async function fetchHackathon() {
       try {
-        const response = await apiClient.get(`/api/v1/hackathons/${params.id}`);
+        const response = await apiClient.get(`/hackathons/${params.id}`);
 
         console.log("Hackathon detail:", response.data);
 
@@ -86,6 +88,23 @@ export default function StudentHackathonDetailPage() {
     }
 
     fetchHackathon();
+  }, [params.id]);
+
+  useEffect(() => {
+    async function fetchTeamStatus() {
+      try {
+        await apiClient.get(`/hackathons/${params.id}/my-team`);
+        setTeamStatus("You are currently part of a team.");
+      } catch (error) {
+        if (error.response?.data?.error?.code === "TEAM_NOT_FOUND") {
+          setTeamStatus("You are not currently part of a team.");
+        } else {
+          setTeamStatus("Team status is unavailable.");
+        }
+      }
+    }
+
+    fetchTeamStatus();
   }, [params.id]);
 
   if (isLoading) {
@@ -153,4 +172,18 @@ export default function StudentHackathonDetailPage() {
       </p>
     </div>
   );
+
+      <section className="my-6 max-w-2xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-xl font-semibold">Team</h2>
+        <p className="mt-2 text-gray-700">
+          Create or manage your team for this hackathon.
+        </p>
+        <p className="mt-2 text-sm text-gray-600">{teamStatus}</p>
+        <Link
+          className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+          href={`/hackathons/${hackathon._id}/team`}
+        >
+          Go to Team
+        </Link>
+      </section>
 }

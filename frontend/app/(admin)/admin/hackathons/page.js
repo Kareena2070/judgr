@@ -14,7 +14,7 @@ export default function HackathonsPage() {
   useEffect(() => {
     async function fetchHackathons() {
       try {
-        const response = await apiClient.get("/api/v1/hackathons");
+        const response = await apiClient.get("/hackathons");
 
         console.log("Hackathons:", response.data);
 
