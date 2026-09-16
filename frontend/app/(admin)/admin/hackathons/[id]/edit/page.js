@@ -45,17 +45,39 @@ export default function EditHackathonPage() {
   }, [params.id]);
 
   if (isLoading) {
-    return <p>Loading hackathon...</p>;
+    return (
+      <main className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
+        <p className="rounded-lg border border-dashed border-[#e5e5e0] bg-white px-4 py-12 text-center text-sm text-[#737373]">
+          Loading hackathon...
+        </p>
+      </main>
+    );
   }
 
   if (!hackathon) {
-    return <p>Hackathon not found.</p>;
+    return (
+      <main className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
+        <p className="rounded-lg border border-[#fee2e2] bg-[#fff7f7] px-4 py-12 text-center text-sm font-medium text-[#b91c1c]">
+          Hackathon not found.
+        </p>
+      </main>
+    );
   }
 
   return (
     <AdminRouteGuard>
-      <div>
-        <h1>Edit Hackathon</h1>
+      <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:py-10">
+        <div className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#2563eb]">
+            Hackathons
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#171717]">
+            Edit Hackathon
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-[#737373]">
+            Update the event details while respecting its current lifecycle.
+          </p>
+        </div>
 
         <HackathonForm
           initialData={{
@@ -82,7 +104,7 @@ export default function EditHackathonPage() {
           }}
           isEdit={true}
         />
-      </div>
+      </main>
     </AdminRouteGuard>
   );
 }

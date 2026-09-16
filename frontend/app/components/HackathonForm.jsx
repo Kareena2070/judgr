@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import apiClient from "../lib/apiClient";
 
 export default function HackathonForm({ initialData = null, isEdit = false }) {
@@ -195,232 +196,78 @@ export default function HackathonForm({ initialData = null, isEdit = false }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="space-y-6 pb-24" onSubmit={handleSubmit}>
       {isEdit && status === "REGISTRATION" && (
-        <p>
+        <p className="rounded-md bg-[#dbeafe] px-4 py-3 text-sm leading-5 text-[#1d4ed8]">
           Registration has started. You can still edit the title, description,
           and theme, but dates and team size are locked.
         </p>
       )}
 
       {isEdit && status === "SUBMISSION" && (
-        <p>
+        <p className="rounded-md bg-[#fef3c7] px-4 py-3 text-sm leading-5 text-[#a16207]">
           Submission is in progress. You can still edit the title, description,
           and theme, but dates and team size are locked.
         </p>
       )}
 
       {isEditingLocked && (
-        <p>
+        <p className="rounded-md bg-[#fee2e2] px-4 py-3 text-sm leading-5 text-[#b91c1c]">
           This hackathon can no longer be edited because judging has started or
           completed.
         </p>
       )}
-      {/* fields will come here */}
-      <label htmlFor="title">Title</label>
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#2563eb]">Basics</p>
+        <div className="mt-5 space-y-5">
+          <div>
+            <label className="block text-sm font-semibold text-[#171717]" htmlFor="title">Title</label>
+            <input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm text-[#171717] outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="title" type="text" disabled={!canEditBasicFields} value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+            {errors.title && <p className="mt-2 text-sm text-[#b91c1c]">{errors.title}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#171717]" htmlFor="description">Description</label>
+            <textarea className="mt-2 min-h-28 w-full rounded-md border border-[#e5e5e0] px-3 py-2 text-sm leading-6 text-[#171717] outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="description" disabled={!canEditBasicFields} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+            {errors.description && <p className="mt-2 text-sm text-[#b91c1c]">{errors.description}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#171717]" htmlFor="theme">Theme</label>
+            <input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm text-[#171717] outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="theme" type="text" disabled={!canEditBasicFields} value={formData.theme} onChange={(e) => setFormData({ ...formData, theme: e.target.value })} />
+            {errors.theme && <p className="mt-2 text-sm text-[#b91c1c]">{errors.theme}</p>}
+          </div>
+        </div>
+      </section>
 
-      <input
-        id="title"
-        type="text"
-        disabled={!canEditBasicFields}
-        value={formData.title}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            title: e.target.value,
-          })
-        }
-      />
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#2563eb]">Dates</p>
+        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="registrationStart">Registration Start</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="registrationStart" type="datetime-local" disabled={!canEditAllFields} value={formData.registrationStart} onChange={(e) => setFormData({ ...formData, registrationStart: e.target.value })} />{errors.registrationStart && <p className="mt-2 text-sm text-[#b91c1c]">{errors.registrationStart}</p>}</div>
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="registrationEnd">Registration End</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="registrationEnd" type="datetime-local" disabled={!canEditAllFields} value={formData.registrationEnd} onChange={(e) => setFormData({ ...formData, registrationEnd: e.target.value })} />{errors.registrationEnd && <p className="mt-2 text-sm text-[#b91c1c]">{errors.registrationEnd}</p>}</div>
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="submissionStart">Submission Start</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="submissionStart" type="datetime-local" disabled={!canEditAllFields} value={formData.submissionStart} onChange={(e) => setFormData({ ...formData, submissionStart: e.target.value })} />{errors.submissionStart && <p className="mt-2 text-sm text-[#b91c1c]">{errors.submissionStart}</p>}</div>
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="submissionEnd">Submission End</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="submissionEnd" type="datetime-local" disabled={!canEditAllFields} value={formData.submissionEnd} onChange={(e) => setFormData({ ...formData, submissionEnd: e.target.value })} />{errors.submissionEnd && <p className="mt-2 text-sm text-[#b91c1c]">{errors.submissionEnd}</p>}</div>
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="judgingStart">Judging Start</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="judgingStart" type="datetime-local" disabled={!canEditAllFields} value={formData.judgingStart} onChange={(e) => setFormData({ ...formData, judgingStart: e.target.value })} />{errors.judgingStart && <p className="mt-2 text-sm text-[#b91c1c]">{errors.judgingStart}</p>}</div>
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="judgingEnd">Judging End</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="judgingEnd" type="datetime-local" disabled={!canEditAllFields} value={formData.judgingEnd} onChange={(e) => setFormData({ ...formData, judgingEnd: e.target.value })} />{errors.judgingEnd && <p className="mt-2 text-sm text-[#b91c1c]">{errors.judgingEnd}</p>}</div>
+        </div>
+      </section>
 
-      {errors.title && <p>{errors.title}</p>}
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#2563eb]">Team Size</p>
+        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="teamSizeMin">Minimum Team Size</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="teamSizeMin" type="number" disabled={!canEditAllFields} value={formData.teamSize.min} onChange={(e) => setFormData({ ...formData, teamSize: { ...formData.teamSize, min: Number(e.target.value) } })} /></div>
+          <div><label className="block text-sm font-semibold text-[#171717]" htmlFor="teamSizeMax">Maximum Team Size</label><input className="mt-2 h-11 w-full rounded-md border border-[#e5e5e0] px-3 text-sm outline-none focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 disabled:cursor-not-allowed disabled:bg-[#f1f1ee]" id="teamSizeMax" type="number" disabled={!canEditAllFields} value={formData.teamSize.max} onChange={(e) => setFormData({ ...formData, teamSize: { ...formData.teamSize, max: Number(e.target.value) } })} />{errors.teamSize && <p className="mt-2 text-sm text-[#b91c1c]">{errors.teamSize}</p>}</div>
+        </div>
+      </section>
 
-      <label htmlFor="description">Description</label>
-
-      <textarea
-        id="description"
-        disabled={!canEditBasicFields}
-        value={formData.description}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            description: e.target.value,
-          })
-        }
-      />
-      {errors.description && <p>{errors.description}</p>}
-
-      <label htmlFor="theme">Theme</label>
-
-      <input
-        id="theme"
-        type="text"
-        disabled={!canEditBasicFields}
-        value={formData.theme}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            theme: e.target.value,
-          })
-        }
-      />
-
-      {errors.theme && <p>{errors.theme}</p>}
-
-      <label htmlFor="registrationStart">Registration Start</label>
-
-      <input
-        id="registrationStart"
-        type="datetime-local"
-        disabled={!canEditAllFields}
-        value={formData.registrationStart}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            registrationStart: e.target.value,
-          })
-        }
-      />
-
-      {errors.registrationStart && <p>{errors.registrationStart}</p>}
-
-      <label htmlFor="registrationEnd">Registration End</label>
-
-      <input
-        id="registrationEnd"
-        type="datetime-local"
-        disabled={!canEditAllFields}
-        value={formData.registrationEnd}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            registrationEnd: e.target.value,
-          })
-        }
-      />
-
-      {errors.registrationEnd && <p>{errors.registrationEnd}</p>}
-
-      {/* Submission */}
-
-      <label htmlFor="submissionStart">Submission Start</label>
-
-      <input
-        id="submissionStart"
-        type="datetime-local"
-        disabled={!canEditAllFields}
-        value={formData.submissionStart}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            submissionStart: e.target.value,
-          })
-        }
-      />
-
-      {errors.submissionStart && <p>{errors.submissionStart}</p>}
-
-      <label htmlFor="submissionEnd">Submission End</label>
-
-      <input
-        id="submissionEnd"
-        type="datetime-local"
-        disabled={!canEditAllFields}
-        value={formData.submissionEnd}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            submissionEnd: e.target.value,
-          })
-        }
-      />
-
-      {errors.submissionEnd && <p>{errors.submissionEnd}</p>}
-
-      {/* Judging */}
-
-      <label htmlFor="judgingStart">Judging Start</label>
-
-      <input
-        id="judgingStart"
-        type="datetime-local"
-        disabled={!canEditAllFields}
-        value={formData.judgingStart}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            judgingStart: e.target.value,
-          })
-        }
-      />
-
-      {errors.judgingStart && <p>{errors.judgingStart}</p>}
-
-      <label htmlFor="judgingEnd">Judging End</label>
-
-      <input
-        id="judgingEnd"
-        type="datetime-local"
-        disabled={!canEditAllFields}
-        value={formData.judgingEnd}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            judgingEnd: e.target.value,
-          })
-        }
-      />
-
-      {errors.judgingEnd && <p>{errors.judgingEnd}</p>}
-
-      <label htmlFor="teamSizeMin">Minimum Team Size</label>
-
-      <input
-        id="teamSizeMin"
-        type="number"
-        disabled={!canEditAllFields}
-        value={formData.teamSize.min}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            teamSize: {
-              ...formData.teamSize,
-              min: Number(e.target.value),
-            },
-          })
-        }
-      />
-
-      <label htmlFor="teamSizeMax">Maximum Team Size</label>
-
-      <input
-        id="teamSizeMax"
-        type="number"
-        disabled={!canEditAllFields}
-        value={formData.teamSize.max}
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            teamSize: {
-              ...formData.teamSize,
-              max: Number(e.target.value),
-            },
-          })
-        }
-      />
-
-      {errors.teamSize && <p>{errors.teamSize}</p>}
-
-      {!isEditingLocked && (
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? isEdit
-              ? "Updating..."
-              : "Creating..."
-            : isEdit
-              ? "Update Hackathon"
-              : "Create Hackathon"}
-        </button>
-      )}
+      <div className="sticky bottom-4 z-10 flex items-center justify-end gap-3 rounded-lg border border-[#e5e5e0] bg-white/95 p-3 shadow-[0_1px_3px_rgba(23,23,23,0.06)] backdrop-blur">
+        <Link className="rounded-md border border-[#e5e5e0] px-4 py-2 text-sm font-semibold text-[#737373] hover:border-[#171717] hover:text-[#171717]" href="/admin/hackathons">
+          Cancel
+        </Link>
+        {!isEditingLocked && (
+          <button className="inline-flex h-10 items-center justify-center rounded-md bg-[#2563eb] px-4 text-sm font-semibold text-white hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:bg-[#a3a3a3]" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (isEdit ? "Updating..." : "Creating...") : isEdit ? "Update Hackathon" : "Create Hackathon"}
+          </button>
+        )}
+      </div>
     </form>
   );
 }

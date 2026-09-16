@@ -10,48 +10,107 @@ export default function NavBar() {
 
   const hackathonId = pathname.match(/^\/hackathons\/([^/]+)/)?.[1];
   const myTeamHref = hackathonId ? `/hackathons/${hackathonId}/team` : null;
+  const userInitial =
+    user?.name?.trim()?.charAt(0).toUpperCase() ||
+    user?.role?.charAt(0).toUpperCase() ||
+    "U";
+
+  const linkClass = (href) => {
+    const isActive =
+      pathname === href ||
+      (href !== "/" && pathname.startsWith(`${href}/`));
+
+    return `relative inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+      isActive
+        ? "bg-[#dbeafe] text-[#1d4ed8]"
+        : "text-[#737373] hover:bg-[#f1f1ee] hover:text-[#171717]"
+    }`;
+  };
 
   if (!user) {
     return null;
   }
 
   return (
-    <nav className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 bg-white px-6 py-4">
-      <div>
-        <Link className="font-bold" href="/">Judgr</Link>
-      </div>
+    <nav className="border-b border-[#e5e5e0] bg-white px-4 sm:px-6">
+      <div className="mx-auto flex min-h-16 max-w-7xl items-center gap-4">
+        <Link className="shrink-0 text-lg font-bold tracking-tight text-[#171717]" href="/">
+          Judgr
+        </Link>
 
-      <div className="flex flex-wrap items-center gap-4 text-sm">
-        {user.role === "student" && (
-          <>
-            <Link href="/student">Student Dashboard</Link>
-            <Link href="/hackathons">Hackathons</Link>
-            {myTeamHref && <Link href={myTeamHref}>My Team</Link>}
-            <Link href="/student#invitations">My Invitations</Link>
-          </>
-        )}
+        <div className="ml-auto flex items-center gap-1 overflow-x-auto">
+          {user.role === "student" && (
+            <>
+              <Link
+                className={linkClass("/student")}
+                href="/student"
+                aria-current={pathname === "/student" ? "page" : undefined}
+              >
+                Dashboard
+              </Link>
+              <Link
+                className={linkClass("/hackathons")}
+                href="/hackathons"
+                aria-current={pathname.startsWith("/hackathons") ? "page" : undefined}
+              >
+                Hackathons
+              </Link>
+              {myTeamHref && (
+                <Link
+                  className={linkClass(myTeamHref)}
+                  href={myTeamHref}
+                  aria-current={pathname === myTeamHref ? "page" : undefined}
+                >
+                  My Team
+                </Link>
+              )}
+              <Link
+                className={linkClass("/student#invitations")}
+                href="/student#invitations"
+              >
+                Invitations
+              </Link>
+            </>
+          )}
 
-        {user.role === "judge" && (
-          <>
-            <Link href="/judge">Judge Dashboard</Link>
-          </>
-        )}
+          {user.role === "judge" && (
+            <Link
+              className={linkClass("/judge")}
+              href="/judge"
+              aria-current={pathname === "/judge" ? "page" : undefined}
+            >
+              Dashboard
+            </Link>
+          )}
 
-        {user.role === "admin" && (
-          <>
-            <Link href="/admin">Admin Dashboard</Link>
-          </>
-        )}
-      </div>
+          {user.role === "admin" && (
+            <Link
+              className={linkClass("/admin")}
+              href="/admin"
+              aria-current={pathname === "/admin" ? "page" : undefined}
+            >
+              Dashboard
+            </Link>
+          )}
+        </div>
 
-      <div className="flex items-center gap-3 text-sm">
-        <span className="text-gray-600">
-          {user.name} ({user.role})
-        </span>
+        <div className="flex shrink-0 items-center gap-3 border-l border-[#e5e5e0] pl-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f1f1ee] text-sm font-bold text-[#171717]">
+              {userInitial}
+            </span>
+            <span className="hidden text-sm font-medium capitalize text-[#171717] sm:inline">
+              {user.name}
+            </span>
+          </div>
 
-        <button className="rounded-md border border-gray-300 px-3 py-1.5 font-medium hover:bg-gray-50" onClick={logout}>
-          Logout
-        </button>
+          <button
+            className="rounded-md border border-[#e5e5e0] px-3 py-2 text-sm font-semibold text-[#737373] transition-colors hover:border-[#171717] hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
+            onClick={logout}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );

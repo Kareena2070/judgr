@@ -107,12 +107,14 @@ export default function StudentPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-6 p-6">
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="text-3xl font-bold">Student Dashboard</h1>
+    <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 lg:py-10">
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <h1 className="text-3xl font-bold tracking-tight text-[#171717]">
+          Student Dashboard
+        </h1>
 
         {user && (
-          <div className="mt-4 space-y-1 text-gray-700">
+          <div className="mt-4 space-y-1 text-sm leading-6 text-[#737373]">
             <p>Welcome, {user.name}</p>
             <p>Email: {user.email}</p>
             <p>Role: {user.role}</p>
@@ -120,53 +122,63 @@ export default function StudentPage() {
         )}
       </section>
 
-      <section id="invitations" className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold">My Invitations</h2>
+      <section id="invitations" className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <h2 className="text-xl font-bold tracking-tight text-[#171717]">
+          My Invitations
+        </h2>
 
         {invitationsLoading ? (
-          <p className="mt-3 text-gray-600">Loading invitations...</p>
+          <p className="mt-4 text-sm leading-6 text-[#737373]">
+            Loading invitations...
+          </p>
         ) : invitationsError ? (
-          <p className="mt-3 text-red-700">{invitationsError}</p>
+          <p className="mt-4 rounded-md bg-[#fee2e2] px-3 py-2 text-sm font-medium leading-5 text-[#b91c1c]">
+            {invitationsError}
+          </p>
         ) : invitations.length === 0 ? (
-          <>
-            <p className="mt-3 text-gray-700">
+          <div className="mt-5 rounded-lg border border-dashed border-[#e5e5e0] bg-[#f8f8f6] px-4 py-10 text-center">
+            <p className="text-sm leading-6 text-[#737373]">
               You don&apos;t have any pending team invitations.
             </p>
             <Link
-              className="mt-4 inline-block rounded-md border border-gray-300 px-4 py-2 font-medium hover:bg-gray-50"
+              className="mt-5 inline-flex h-10 items-center justify-center rounded-md border border-[#e5e5e0] bg-white px-4 text-sm font-semibold text-[#171717] transition-colors hover:border-[#2563eb] hover:text-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
               href="/hackathons"
             >
               Browse Hackathons
             </Link>
-          </>
+          </div>
         ) : (
-          <div className="mt-4 space-y-4">
+          <div className="mt-5 space-y-4">
             {invitations.map((invitation) => {
               const hackathon = invitation.teamId?.hackathonId;
               const hackathonId = getHackathonId(invitation);
 
               return (
                 <article
-                  className="rounded-md border border-gray-200 p-4"
+                  className="rounded-lg border border-[#e5e5e0] bg-[#f8f8f6] p-5"
                   key={invitation._id}
                 >
-                  <h3 className="font-semibold">Team Invitation</h3>
-                  <p className="mt-2 text-lg font-medium">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-[#2563eb]">
+                    Team Invitation
+                  </h3>
+                  <p className="mt-3 text-lg font-bold tracking-tight text-[#171717]">
                     {invitation.teamId?.name || "Team invitation"}
                   </p>
-                  <p className="mt-2 text-gray-700">{invitation.message}</p>
+                  <p className="mt-2 text-sm leading-6 text-[#737373]">
+                    {invitation.message}
+                  </p>
                   {hackathon && (
-                    <p className="mt-2 text-sm text-gray-600">
+                    <p className="mt-3 text-xs font-medium text-[#737373]">
                       Hackathon: {hackathon.title || hackathonId}
                     </p>
                   )}
                   {invitation.createdAt && (
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-xs text-[#737373]">
                       Received: {new Date(invitation.createdAt).toLocaleString()}
                     </p>
                   )}
                   <button
-                    className="mt-4 rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+                    className="mt-5 inline-flex h-10 items-center justify-center rounded-md bg-[#2563eb] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#a3a3a3]"
                     disabled={acceptingInvitationId === invitation._id}
                     onClick={() => handleAcceptInvitation(invitation)}
                   >
@@ -181,18 +193,20 @@ export default function StudentPage() {
         )}
 
         {successMessage && (
-          <div className="mt-4 rounded-md border border-green-200 bg-green-50 p-4">
-            <p className="text-green-800">{successMessage}</p>
+          <div className="mt-5 rounded-md bg-[#dcfce7] p-4">
+            <p className="text-sm font-medium leading-5 text-[#15803d]">
+              {successMessage}
+            </p>
             {getHackathonId(acceptedInvitation) && (
               <Link
-                className="mt-3 inline-block rounded-md bg-green-700 px-4 py-2 font-medium text-white hover:bg-green-800"
+                className="mt-4 inline-flex h-10 items-center justify-center rounded-md bg-[#15803d] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#166534] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] focus-visible:ring-offset-2"
                 href={`/hackathons/${getHackathonId(acceptedInvitation)}/team`}
               >
                 Go to My Team
               </Link>
             )}
             {!getHackathonId(acceptedInvitation) && (
-              <p className="mt-3 text-red-700">
+              <p className="mt-3 text-sm font-medium leading-5 text-[#b91c1c]">
                 Your invitation was accepted, but the team hackathon could not
                 be identified. Reload the page and try again.
               </p>
@@ -201,11 +215,11 @@ export default function StudentPage() {
         )}
       </section>
 
-      <Link className="inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700" href="/hackathons">
+      <Link className="inline-flex h-10 items-center justify-center rounded-md bg-[#2563eb] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2" href="/hackathons">
         Browse Hackathons
       </Link>
 
-      <button className="block rounded-md border border-gray-300 px-4 py-2 font-medium hover:bg-gray-50" onClick={logout}>
+      <button className="block rounded-md border border-[#e5e5e0] px-4 py-2 text-sm font-semibold text-[#737373] transition-colors hover:border-[#171717] hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2" onClick={logout}>
         Logout
       </button>
     </main>

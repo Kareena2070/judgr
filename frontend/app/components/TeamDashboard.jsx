@@ -57,32 +57,42 @@ export default function TeamDashboard({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          My Team
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#2563eb]">
+          My team
         </p>
-        <h1 className="mt-1 text-3xl font-bold">{team.name}</h1>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#171717]">
+          {team.name}
+        </h1>
 
-        <p className="mt-2 text-gray-700">
-          Members: {members.length} / {hackathon.teamSize.max}
+        <p className="mt-3 text-sm text-[#737373]">
+          {members.length} of {hackathon.teamSize.max} members
         </p>
       </section>
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold">Members</h2>
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <h2 className="text-lg font-bold tracking-tight text-[#171717]">
+          Members
+        </h2>
 
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-5 divide-y divide-[#e5e5e0]">
           {members.map((member) => (
-            <li className="rounded-md border border-gray-200 p-4" key={member._id}>
-              <strong className="block">{member.userId?.name}</strong>
-              <span className="text-sm text-gray-600">Role: {member.role}</span>
+            <li className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0" key={member._id}>
+              <strong className="text-sm font-semibold text-[#171717]">
+                {member.userId?.name}
+              </strong>
+              <span className="rounded-full bg-[#f1f1ee] px-2.5 py-1 text-xs font-semibold capitalize text-[#737373]">
+                {member.role}
+              </span>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold">Team Actions</h2>
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <h2 className="text-lg font-bold tracking-tight text-[#171717]">
+          Team actions
+        </h2>
         {isLeader && (
           <InviteMemberForm
             teamId={team._id}
@@ -91,7 +101,7 @@ export default function TeamDashboard({
         )}
 
         <button
-          className="mt-4 rounded-md border border-gray-300 px-4 py-2 font-medium hover:bg-gray-50 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+          className="mt-5 inline-flex h-10 items-center justify-center rounded-md border border-[#e5e5e0] px-4 text-sm font-semibold text-[#737373] transition-colors hover:border-[#b91c1c] hover:text-[#b91c1c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#f1f1ee] disabled:text-[#a3a3a3]"
           onClick={handleLeave}
           disabled={leaving || isLeader}
         >
@@ -99,12 +109,16 @@ export default function TeamDashboard({
         </button>
 
         {isLeader && (
-          <p className="mt-3 text-sm text-gray-600">
+          <p className="mt-3 rounded-md bg-[#fef3c7] px-3 py-2 text-sm leading-5 text-[#a16207]">
             Team leaders cannot leave until leadership is reassigned.
           </p>
         )}
 
-        {error && <p className="mt-3 text-red-700">{error}</p>}
+        {error && (
+          <p className="mt-3 rounded-md bg-[#fee2e2] px-3 py-2 text-sm font-medium leading-5 text-[#b91c1c]">
+            {error}
+          </p>
+        )}
       </section>
     </div>
   );

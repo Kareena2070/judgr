@@ -66,29 +66,59 @@ export default function TeamPage() {
   }, [loadHackathon, loadTeam]);
 
   if (authLoading || loading) {
-    return <main className="p-6"><p>Loading team...</p></main>;
+    return (
+      <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
+        <div className="rounded-xl border border-dashed border-[#e5e5e0] bg-white px-4 py-16 text-center text-sm text-[#737373]">
+          Loading team...
+        </div>
+      </main>
+    );
   }
 
   if (error) {
-    return <main className="p-6"><p className="text-red-700">{error}</p></main>;
+    return (
+      <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
+        <p className="rounded-md bg-[#fee2e2] px-4 py-3 text-sm font-medium text-[#b91c1c]">
+          {error}
+        </p>
+      </main>
+    );
   }
 
   if (!hackathon) {
-    return <main className="p-6"><p>Hackathon not found.</p></main>;
+    return (
+      <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
+        <p className="rounded-md border border-[#e5e5e0] bg-white px-4 py-6 text-sm text-[#737373]">
+          Hackathon not found.
+        </p>
+      </main>
+    );
   }
 
   if (!team) {
     return (
-      <main className="mx-auto w-full max-w-3xl space-y-6 p-6">
+      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 lg:py-10">
         <div>
-          <p className="text-sm text-gray-600">{hackathon.title}</p>
-          <h1 className="text-3xl font-bold">Your Team</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#2563eb]">
+            {hackathon.title}
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#171717]">
+            Your Team
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-[#737373]">
+            Build your team or join one that is already forming.
+          </p>
         </div>
 
-        <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold">Your Team</h2>
-          <p className="mt-2 text-gray-700">
-            You are not currently part of a team.
+        <section className="rounded-xl border border-dashed border-[#bfdbfe] bg-[#eff6ff] p-6 sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#2563eb]">
+            Team workspace
+          </p>
+          <h2 className="mt-2 text-xl font-bold tracking-tight text-[#171717]">
+            No team yet
+          </h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-[#737373]">
+            You are not currently part of a team. Create one to start inviting collaborators.
           </p>
         </section>
 
@@ -104,7 +134,7 @@ export default function TeamPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl p-6">
+    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:py-10">
       <TeamDashboard
         team={team}
         hackathon={hackathon}

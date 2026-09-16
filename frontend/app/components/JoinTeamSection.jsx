@@ -79,38 +79,54 @@ export default function JoinTeamSection({
 
   if (loading) {
     return (
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold">Join an Existing Team</h2>
-        <p className="mt-3 text-gray-600">Loading teams...</p>
+      <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+        <h2 className="text-xl font-bold tracking-tight text-[#171717]">
+          Join an Existing Team
+        </h2>
+        <p className="mt-3 text-sm leading-6 text-[#737373]">Loading teams...</p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold">Join an Existing Team</h2>
+    <section className="rounded-xl border border-[#e5e5e0] bg-white p-6 shadow-[0_1px_3px_rgba(23,23,23,0.06)] sm:p-8">
+      <h2 className="text-xl font-bold tracking-tight text-[#171717]">
+        Join an Existing Team
+      </h2>
 
-      {message && <p className="mt-3 text-green-700">{message}</p>}
-      {error && <p className="mt-3 text-red-700">{error}</p>}
+      {message && (
+        <p className="mt-4 rounded-md bg-[#dcfce7] px-3 py-2 text-sm font-medium text-[#15803d]">
+          {message}
+        </p>
+      )}
+      {error && (
+        <p className="mt-4 rounded-md bg-[#fee2e2] px-3 py-2 text-sm font-medium text-[#b91c1c]">
+          {error}
+        </p>
+      )}
 
       {teams.length === 0 ? (
-        <p className="mt-3 text-gray-600">No teams are currently available.</p>
+        <p className="mt-4 rounded-lg border border-dashed border-[#e5e5e0] bg-[#f8f8f6] px-4 py-8 text-center text-sm leading-6 text-[#737373]">
+          No teams are currently available.
+        </p>
       ) : (
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-6 space-y-3">
           {teams.map((team) => (
             <li
-              className="flex flex-col gap-3 rounded-md border border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-4 rounded-lg border border-[#e5e5e0] bg-[#f8f8f6] p-4 transition-colors hover:border-[#bfdbfe] sm:flex-row sm:items-center sm:justify-between"
               key={team._id}
             >
               <div>
-                <strong className="block">{team.name}</strong>
-                <span className="text-sm text-gray-600">
+                <strong className="block text-sm font-semibold text-[#171717]">
+                  {team.name}
+                </strong>
+                <span className="mt-1 block text-xs text-[#737373]">
                   Members: {team.memberCount} / {maxMembers}
                 </span>
               </div>
 
               <button
-                className="rounded-md bg-blue-600 px-3 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-[#2563eb] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#a3a3a3]"
                 onClick={() => handleJoin(team._id)}
                 disabled={joiningTeamId === team._id}
               >
