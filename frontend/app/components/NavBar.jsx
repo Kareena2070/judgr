@@ -2,116 +2,70 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
+const publicLinks = [
+  { label: "Hackathons", href: "/hackathons" },
+  { label: "How It Works", href: "/#how-it-works" },
+];
+
+function dashboardHref(role) {
+  if (role === "student") return "/student";
+  if (role === "admin") return "/admin";
+  return "/";
+}
+
 export default function NavBar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const pathname = usePathname();
-
-  const hackathonId = pathname.match(/^\/hackathons\/([^/]+)/)?.[1];
-  const myTeamHref = hackathonId ? `/hackathons/${hackathonId}/team` : null;
-  const userInitial =
-    user?.name?.trim()?.charAt(0).toUpperCase() ||
-    user?.role?.charAt(0).toUpperCase() ||
-    "U";
-
-  const linkClass = (href) => {
-    const isActive =
-      pathname === href ||
-      (href !== "/" && pathname.startsWith(`${href}/`));
-
-    return `relative inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-      isActive
-        ? "bg-[#dbeafe] text-[#1d4ed8]"
-        : "text-[#737373] hover:bg-[#f1f1ee] hover:text-[#171717]"
-    }`;
-  };
-
-  if (!user) {
-    return null;
-  }
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const linkClass = (href) => `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+    href === "/hackathons" && pathname.startsWith("/hackathons")
+      ? "bg-[#eff6ff] text-[#1d4ed8]"
+      : "text-[#525252] hover:bg-[#f1f1ee] hover:text-[#171717]"
+  }`;
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="border-b border-[#e5e5e0] bg-white px-4 sm:px-6">
-      <div className="mx-auto flex min-h-16 max-w-7xl items-center gap-4">
-        <Link className="shrink-0 text-lg font-bold tracking-tight text-[#171717]" href="/">
-          Judgr
-        </Link>
-
-        <div className="ml-auto flex items-center gap-1 overflow-x-auto">
-          {user.role === "student" && (
+    <header className="sticky top-0 z-30 border-b border-[#e5e5e0]/90 bg-white/95 backdrop-blur">
+      <nav className="mx-auto flex min-h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+        <Link className="text-xl font-bold tracking-tight text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]" href="/" onClick={closeMenu}>Judgr</Link>
+        <div className="hidden items-center gap-1 md:flex">
+          {publicLinks.map((link) => <Link className={linkClass(link.href)} href={link.href} key={link.href}>{link.label}</Link>)}
+        </div>
+        <div className="hidden items-center gap-2 md:flex">
+          {isLoading ? <span className="h-9 w-24 animate-pulse rounded-md bg-[#f1f1ee]" aria-label="Loading account" /> : user ? (
             <>
-              <Link
-                className={linkClass("/student")}
-                href="/student"
-                aria-current={pathname === "/student" ? "page" : undefined}
-              >
-                Dashboard
-              </Link>
-              <Link
-                className={linkClass("/hackathons")}
-                href="/hackathons"
-                aria-current={pathname.startsWith("/hackathons") ? "page" : undefined}
-              >
-                Hackathons
-              </Link>
-              {myTeamHref && (
-                <Link
-                  className={linkClass(myTeamHref)}
-                  href={myTeamHref}
-                  aria-current={pathname === myTeamHref ? "page" : undefined}
-                >
-                  My Team
-                </Link>
-              )}
-              <Link
-                className={linkClass("/student#invitations")}
-                href="/student#invitations"
-              >
-                Invitations
-              </Link>
+              <Link className="inline-flex h-10 items-center justify-center rounded-md px-4 text-sm font-semibold text-[#171717] hover:bg-[#f1f1ee]" href={dashboardHref(user.role)}>Dashboard</Link>
+              <button className="inline-flex h-10 items-center justify-center rounded-md border border-[#e5e5e0] px-4 text-sm font-semibold text-[#525252] transition-colors hover:border-[#171717] hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2" onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link className="inline-flex h-10 items-center justify-center rounded-md px-4 text-sm font-semibold text-[#171717] hover:bg-[#f1f1ee]" href="/login">Login</Link>
+              <Link className="inline-flex h-10 items-center justify-center rounded-md bg-[#2563eb] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2" href="/register">Get Started</Link>
             </>
           )}
-
-          {user.role === "judge" && (
-            <Link
-              className={linkClass("/judge")}
-              href="/judge"
-              aria-current={pathname === "/judge" ? "page" : undefined}
-            >
-              Dashboard
-            </Link>
-          )}
-
-          {user.role === "admin" && (
-            <Link
-              className={linkClass("/admin")}
-              href="/admin"
-              aria-current={pathname === "/admin" ? "page" : undefined}
-            >
-              Dashboard
-            </Link>
-          )}
         </div>
-
-        <div className="flex shrink-0 items-center gap-3 border-l border-[#e5e5e0] pl-3">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f1f1ee] text-sm font-bold text-[#171717]">
-              {userInitial}
-            </span>
-            <span className="hidden text-sm font-medium capitalize text-[#171717] sm:inline">
-              {user.name}
-            </span>
+        <button className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[#e5e5e0] text-[#171717] md:hidden" type="button" aria-label={isMenuOpen ? "Close menu" : "Open menu"} aria-expanded={isMenuOpen} onClick={() => setIsMenuOpen((open) => !open)}>
+          <span aria-hidden="true" className="text-xl">{isMenuOpen ? "×" : "☰"}</span>
+        </button>
+      </nav>
+      {isMenuOpen && (
+        <div className="border-t border-[#e5e5e0] bg-white px-4 py-3 md:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col gap-1 sm:px-2">
+            {publicLinks.map((link) => <Link className={linkClass(link.href)} href={link.href} key={link.href} onClick={closeMenu}>{link.label}</Link>)}
+            <div className="my-2 border-t border-[#e5e5e0]" />
+            {!isLoading && (user ? <>
+              <Link className={linkClass(dashboardHref(user.role))} href={dashboardHref(user.role)} onClick={closeMenu}>Dashboard</Link>
+              <button className="rounded-md px-3 py-2 text-left text-sm font-medium text-[#525252] hover:bg-[#f1f1ee] hover:text-[#171717]" onClick={() => { closeMenu(); logout(); }}>Logout</button>
+            </> : <>
+              <Link className={linkClass("/login")} href="/login" onClick={closeMenu}>Login</Link>
+              <Link className="mt-1 inline-flex h-10 items-center justify-center rounded-md bg-[#2563eb] px-4 text-sm font-semibold text-white" href="/register" onClick={closeMenu}>Get Started</Link>
+            </>)}
           </div>
-
-          <button
-            className="rounded-md border border-[#e5e5e0] px-3 py-2 text-sm font-semibold text-[#737373] transition-colors hover:border-[#171717] hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2"
-            onClick={logout}
-          >
-            Logout
-          </button>
         </div>
-      </div>
-    </nav>
+      )}
+    </header>
   );
 }
