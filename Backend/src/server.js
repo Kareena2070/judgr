@@ -7,22 +7,14 @@ const startServer = async () => {
     try{
         await connectDB();
 
-        app.listen(config.port, ()=>{
-            // before logger
-            // console.log(`server running on port ${config.port}`);
-
-            // after logger
+        app.listen(config.port, "0.0.0.0", ()=>{
             logger.info(
                 {port: config.port},
                 "server started successfully"
             )
         });
     }catch(error){
-        // before logger
-        // console.error(`Server startup failed: `, error.message);
-
-        // after logger
-        logger.info(
+        logger.error(
             {err: error},
             "Server startup failed"
         );
@@ -31,7 +23,6 @@ const startServer = async () => {
 }
 
 const shutdown = async (signal)=>{
-    // console.log(`${signal} received. Shutting down gracefully...`);
     logger.info(
         {signal},
         "Shutting down gracefully..."
