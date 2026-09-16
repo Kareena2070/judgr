@@ -33,7 +33,7 @@ const notificationSchema = new mongoose.Schema(
 
         invitationStatus: {
             type: String,
-            enum: ["PENDING", "ACCEPTED"],
+            enum: ["PENDING", "ACCEPTED", "EXPIRED"],
             default: "PENDING",
         },
     },

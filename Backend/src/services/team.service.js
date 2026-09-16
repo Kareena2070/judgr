@@ -180,6 +180,21 @@ const inviteMember = async ({ teamId, userId, email }) => {
     );
   }
 
+  const pendingInvitation = await Notification.findOne({
+    recipient: invitedUser._id,
+    teamId: team._id,
+    type: "TEAM_INVITATION",
+    invitationStatus: "PENDING",
+  });
+
+  if (pendingInvitation) {
+    throw new ApiError(
+      409,
+      "INVITATION_ALREADY_PENDING",
+      "An invitation to this student is already pending.",
+    );
+  }
+
   const notification = await Notification.create({
     recipient: invitedUser._id,
     type: "TEAM_INVITATION",
@@ -243,6 +258,11 @@ const acceptInvitation = async ({ invitationId, userId }) => {
   });
 
   if (existingMembership) {
+    if (String(existingMembership.hackathonId) === String(team.hackathonId)) {
+      notification.invitationStatus = "EXPIRED";
+      await notification.save();
+    }
+
     throw new ApiError(
       409,
       "ALREADY_IN_TEAM",
@@ -270,6 +290,22 @@ const acceptInvitation = async ({ invitationId, userId }) => {
 
   notification.invitationStatus = "ACCEPTED";
   await notification.save();
+
+  const hackathonTeamIds = await Team.find({
+    hackathonId: team.hackathonId,
+  }).distinct("_id");
+
+  await Notification.updateMany(
+    {
+      recipient: userId,
+      type: "TEAM_INVITATION",
+      invitationStatus: "PENDING",
+      teamId: { $in: hackathonTeamIds },
+    },
+    {
+      $set: { invitationStatus: "EXPIRED" },
+    },
+  );
 
   return membership;
 };
