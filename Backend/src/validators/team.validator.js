@@ -19,11 +19,28 @@ const createTeamSchema = z.object({
 });
 
 
+// const inviteMemberSchema = z.object({
+//   body: z.object({
+//     invitedUserId: z
+//       .string()
+//       .min(1, "Invited user ID is required"),
+//   }),
+
+//   params: z.object({
+//     teamId: z
+//       .string()
+//       .min(1, "Team ID is required"),
+//   }),
+
+//   query: z.object({}),
+// });
+
 const inviteMemberSchema = z.object({
   body: z.object({
-    invitedUserId: z
+    email: z
       .string()
-      .min(1, "Invited user ID is required"),
+      .trim()
+      .email("Please enter a valid email"),
   }),
 
   params: z.object({
@@ -34,7 +51,6 @@ const inviteMemberSchema = z.object({
 
   query: z.object({}),
 });
-
 
 module.exports = {
   createTeamSchema,

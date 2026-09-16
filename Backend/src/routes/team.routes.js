@@ -44,6 +44,13 @@ router.post(
   teamController.acceptInvitation
 );
 
+router.get(
+  "/invitations/my",
+  authenticate,
+  requireRole("student"),
+  teamController.getMyPendingInvitations
+);
+
 router.post(
   "/teams/:teamId/leave",
   authenticate,
@@ -63,6 +70,13 @@ router.get(
   authenticate,
   requireRole("student"),
   teamController.getTeamById
+);
+
+router.get(
+  "/hackathons/:hackathonId/teams",
+  authenticate,
+  requireRole("student"),
+  teamController.getTeamsByHackathon
 );
 
 module.exports = router;

@@ -32,12 +32,12 @@ const joinTeam = asyncHandler(async (req, res) => {
 
 const inviteMember = asyncHandler(async (req, res) => {
   const { teamId } = req.params;
-  const { invitedUserId } = req.validated.body;
+  const { email } = req.validated.body;
 
   const notification = await teamService.inviteMember({
     teamId,
     userId: req.user.sub,
-    invitedUserId,
+    email,
   });
 
   return res
@@ -84,6 +84,16 @@ const getMyTeam = asyncHandler(async (req, res) => {
     .json(new ApiResponse(team, "My team fetched successfully"));
 });
 
+const getMyPendingInvitations = asyncHandler(async (req, res) => {
+  const invitations = await teamService.getMyPendingInvitations({
+    userId: req.user.sub,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(invitations, "Invitations fetched successfully"));
+});
+
 const getTeamById = asyncHandler(async (req, res) => {
   const { teamId } = req.params;
 
@@ -96,6 +106,23 @@ const getTeamById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(team, "Team fetched successfully"));
 });
 
+const getTeamsByHackathon = asyncHandler(async (req, res) => {
+  const { hackathonId } = req.params;
+
+  const teams = await teamService.getTeamsByHackathon({
+    hackathonId,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        teams,
+        "Teams fetched successfully"
+      )
+    );
+});
+
 module.exports = {
   createTeam,
   joinTeam,
@@ -103,5 +130,7 @@ module.exports = {
   acceptInvitation,
   leaveTeam,
   getMyTeam,
+  getMyPendingInvitations,
   getTeamById,
+  getTeamsByHackathon,
 };
